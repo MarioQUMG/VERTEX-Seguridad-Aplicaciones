@@ -1,0 +1,14 @@
+services:
+  gateway:
+    image: nginx:stable-alpine
+    container_name: vertex-api-gateway
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:8090:80"
+
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

@@ -1,0 +1,20 @@
+services:
+  caddy:
+    image: caddy:2
+    container_name: vertex-https-lab
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:8443:8443"
+
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,58 @@
+services:
+
+  database:
+    image: mysql:8.4
+    restart: unless-stopped
+
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: vertex
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Define DB_ROOT_PASSWORD}
+
+    volumes:
+      - db_data:/var/lib/mysql
+
+    networks:
+      - backend
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - MYSQL_PWD="$$MYSQL_ROOT_PASSWORD" mysqladmin ping -h localhost -u root --silent
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  wordpress:
+    image: wordpress:php8.3-apache
+    restart: unless-stopped
+
+    depends_on:
+      database:
+        condition: service_healthy
+
+    ports:
+      - "127.0.0.1:8085:80"
+
+    environment:
+      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_USER: vertex
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD}
+      WORDPRESS_DB_NAME: wordpress
+
+    volumes:
+      - wordpress_data:/var/www/html
+
+    networks:
+      - frontend
+      - backend
+
+volumes:
+  db_data:
+  wordpress_data:
+
+networks:
+  frontend:
+  backend:
+    internal: true

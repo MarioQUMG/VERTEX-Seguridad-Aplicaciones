@@ -1,0 +1,23 @@
+services:
+
+  vertex-waf:
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: vertex-waf-lab
+
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:8450:8080"
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

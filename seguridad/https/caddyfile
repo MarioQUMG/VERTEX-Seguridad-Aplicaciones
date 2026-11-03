@@ -1,0 +1,16 @@
+https://localhost:8443 {
+
+    tls internal {
+        protocols tls1.3
+    }
+
+    reverse_proxy host.docker.internal:8085 {
+        header_up X-Forwarded-Proto https
+        header_up X-Forwarded-Host localhost:8443
+    }
+
+    log {
+        output stdout
+        format console
+    }
+}

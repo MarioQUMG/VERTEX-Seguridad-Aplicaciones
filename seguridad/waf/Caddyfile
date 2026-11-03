@@ -1,0 +1,30 @@
+{
+    order coraza_waf first
+}
+
+:8080 {
+
+    coraza_waf {
+
+        load_owasp_crs
+
+        directives `
+
+            Include @coraza.conf-recommended
+            Include @crs-setup.conf.example
+            Include @owasp_crs/*.conf
+
+            SecRuleEngine On
+
+            SecRule REQUEST_URI "@streq /vertex-prueba-waf" "id:100001,phase:1,deny,status:403,log,msg:'VERTEX prueba de bloqueo WAF'"
+
+        `
+    }
+
+    reverse_proxy host.docker.internal:8085
+
+    log {
+        output stdout
+        format console
+    }
+}
