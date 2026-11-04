@@ -1,0 +1,17 @@
+﻿# Credenciales y configuraciones privadas
+.env
+.env.*
+!.env.example
+wp-config.php
+wp-config.php.bak
+*.key
+*.pem
+
+# Bases de datos y respaldos
+*.sql
+*.sql.gz
+*.aes256
+
+# Archivos temporales
+*.log
+*.tmp
